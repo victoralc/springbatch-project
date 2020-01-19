@@ -11,6 +11,9 @@ public class Customer {
     private String state;
     private String zipCode;
 
+    public Customer() {
+    }
+
 	public Customer(String firstName, String middleInitial, String lastName, String addressNumber, String street, String city, String state, String zipCode) {
 		this.firstName = firstName;
 		this.middleInitial = middleInitial;
@@ -77,6 +80,14 @@ public class Customer {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public String getAddressNumber() {
+        return addressNumber;
+    }
+
+    public void setAddressNumber(String addressNumber) {
+        this.addressNumber = addressNumber;
     }
 
     @Override

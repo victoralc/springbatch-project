@@ -34,7 +34,7 @@ public class FixedWidthJob {
 	@Bean
 	@StepScope
 	public FlatFileItemReader<Customer> customerItemReader(
-			@Value("#{jobParameters['customerFile']}") Resource inputFile) {
+			@Value("#{jobParameters['customerFile.csv']}") Resource inputFile) {
 
 		return new FlatFileItemReaderBuilder<Customer>()
 				.name("customerItemReader")
@@ -72,7 +72,7 @@ public class FixedWidthJob {
 
 
 	public static void main(String[] args) {
-		List<String> realArgs = Arrays.asList("customerFile=/input/customerFixedWidth.txt");
+		List<String> realArgs = Arrays.asList("customerFile.csv=/input/customerFixedWidth.txt");
 
 		SpringApplication.run(FixedWidthJob.class, realArgs.toArray(new String[1]));
 	}
