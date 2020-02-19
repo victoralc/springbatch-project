@@ -1,7 +1,7 @@
 //package com.victor.springbatch.transactions.batch;
 //
 //import com.victor.springbatch.transactions.domain.Customer;
-//import com.victor.springbatch.transactions.mappers.CustomerFieldSetMapper;
+//import com.victor.springbatch.transactions.domain.Transaction;
 //import org.springframework.batch.core.Job;
 //import org.springframework.batch.core.Step;
 //import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -11,16 +11,22 @@
 //import org.springframework.batch.item.ItemWriter;
 //import org.springframework.batch.item.file.FlatFileItemReader;
 //import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+//import org.springframework.batch.item.xml.StaxEventItemReader;
+//import org.springframework.batch.item.xml.builder.StaxEventItemReaderBuilder;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.boot.SpringApplication;
 //import org.springframework.boot.autoconfigure.SpringBootApplication;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.core.io.Resource;
+//import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 //
-////@EnableBatchProcessing
-////@SpringBootApplication
-//public class DelimitedFileJob {
+//@EnableBatchProcessing
+//@SpringBootApplication
+//public class XMLFormatJob {
+//
+//    @Value("classpath:input/customers.xml")
+//    Resource inputFile;
 //
 //    @Autowired
 //    private JobBuilderFactory jobBuilderFactory;
@@ -28,46 +34,50 @@
 //    @Autowired
 //    private StepBuilderFactory stepBuilderFactory;
 //
-//    @Value("classpath:input/customerFile.csv")
-//    Resource inputFile;
-//
-//    @Bean
-//    @StepScope
-//    public FlatFileItemReader<Customer> delimitedCustomerFileItemReader() {
-//
-//        return new FlatFileItemReaderBuilder<Customer>()
-//                .name("delimitedCustomerFileItemReader")
-//                .delimited()
-//                .names(new String[] {"firstName", "middleInitial", "lastName",
-//                        "addressNumber", "street", "city", "state","zipCode"})
-//                .fieldSetMapper(new CustomerFieldSetMapper())
-//                .resource(inputFile)
-//                .build();
+//    public static void main(String[] args) {
+//        SpringApplication.run(XMLFormatJob.class, args);
 //    }
 //
 //    @Bean
-//    public ItemWriter<Customer> delimitedFileItemWriter() {
+//	@StepScope
+//	public StaxEventItemReader<Customer> customerFileReader() {
+//		return new StaxEventItemReaderBuilder<Customer>()
+//				.name("customerFileReader")
+//				.resource(inputFile)
+//				.addFragmentRootElements("customer")
+//				.unmarshaller(customerMarshaller())
+//				.build();
+//	}
+//
+//    @Bean
+//	public Jaxb2Marshaller customerMarshaller() {
+//		Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
+//
+//		jaxb2Marshaller.setClassesToBeBound(Customer.class,
+//				Transaction.class);
+//
+//		return jaxb2Marshaller;
+//	}
+//
+//    @Bean
+//    public ItemWriter xmlCustomerFileItemWriter() {
 //        return (items) -> items.forEach(System.out::println);
 //    }
 //
 //    @Bean
-//    public Step delimitedFileCustomerStep() {
-//        return this.stepBuilderFactory.get("delimitedFileCustomerStep")
+//    public Step xmlCustomerFileStep() {
+//        return this.stepBuilderFactory.get("xmlCustomerFileStep")
 //                .<Customer, Customer>chunk(10)
-//                .reader(delimitedCustomerFileItemReader())
-//                .writer(delimitedFileItemWriter())
+//                .reader(customerFileReader())
+//                .writer(xmlCustomerFileItemWriter())
 //                .build();
 //    }
 //
 //    @Bean
-//    public Job delimitedCustomerFileJob() {
-//        return this.jobBuilderFactory.get("delimitedCustomerFileJob")
-//                .start(delimitedFileCustomerStep())
+//    public Job xmlCustomerFileJob() {
+//        return this.jobBuilderFactory.get("xmlCustomerFileJob")
+//                .start(xmlCustomerFileStep())
 //                .build();
-//    }
-//
-//    public static void main(String[] args) {
-//        SpringApplication.run(DelimitedFileJob.class, args);
 //    }
 //
 //}

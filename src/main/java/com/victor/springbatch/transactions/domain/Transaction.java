@@ -6,7 +6,10 @@ public class Transaction {
 
     private String accountNumber;
     private Date timestamp;
-    private double amount;
+    private Double amount;
+
+    public Transaction() {
+    }
 
     public String getAccountNumber() {
         return accountNumber;
@@ -28,8 +31,16 @@ public class Transaction {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "accountNumber='" + accountNumber + '\'' +
+                ", timestamp=" + timestamp +
+                ", amount=" + amount +
+                '}';
+    }
 }
